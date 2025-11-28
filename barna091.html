@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">    <!-- Permetem el zoom tàctil natiu amb user-scalable=yes -->
+    <title>Paisatge de Barcelona</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;   /* El body no té desplaçament, el visor sí */
+            background-color: #333333;  /* Fons fosc per veure millor els límits */
+        }
+        #visor {
+            width: 100vw;
+            height: 100vh;
+            overflow: auto; /* Barres de desplaçament automàtiques */
+            cursor: grab;
+            position: relative;
+            -webkit-overflow-scrolling: touch;  /* Millora per al scroll tàctil */
+        }
+        #visor.arrastrando {
+            cursor: grabbing;
+        }
+        #elSVG {    /* Suprimim height:100% perquè JS controli la mida real */
+            display: block;
+            transform-origin: 0 0;  /* Transform-origin ajuda a fer que el redibuix sigui suau */
+        }
+        #elSVG path {   /* ESTILS de PATHS */
+            cursor: pointer;
+            fill: rgba(255, 255, 255, 0); 
+            stroke: none;
+            transition: fill 0.2s;
+        }
+        #elSVG path:hover {
+            fill: rgba(255, 255, 255, 0.1);
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 1px;
+        }
+        /* TOOLTIP */
+        #tooltip {
+            position: fixed;
+            display: none;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 6px 10px;
+            border: 1px solid #fff;
+            border-radius: 4px;
+            font-family: monospace; /* Fuente monoespaciada estilo consola */
+            font-size: 14px;
+            pointer-events: none; 
+            z-index: 9999;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="tooltip"></div>
+    <div id="visor">
+        <svg id="elSVG" viewBox="0 0 31645 3278" xmlns="http://www.w3.org/2000/svg">
+            <image x="0" y="0" width="31645" height="3278" href="barna055.jpeg"/>
+            <g fill="#ff00ff30">
+                <path d="M43,356 L190,356 190,454 206,454 206,488 43,501 Z" ref="Leonardo Royal Hotel Barcelona Forum"/>
+                <path d="M233,482 L234,458 255,458 255,364 347,364 347,364 347,444 342,476 Z" ref="UTAC Sirius i Departament de Drets Socials"/>
+                <path d="M409,465 L409,366 545,366 545,441 Z" ref="Hilton Diagonal Mar Barcelona"/>
+                <path d="M1082,365 L1181,365 1177,480 1079,450 Z" ref="EXKLUSIV luxury real estate"/>
+                <path d="M0,508 L103,494 312,480 556,436 637,401 813,397 896,405 1081,443 1346,526 1614,650 
+                            1788,712 1673,718 1673,838 1506,906 1175,949 784,983 533,976 546,798 332,809 0,647 Z" ref="Parc del Carmel"/>
+                <path d="M729,401 L729,382 721,382 721,401 Z" ref="el paco"/>
+                <path d="M729,401 L729,382 735,382 735,401 Z" ref="la encarna"/>
+                <path d="M1509,433 L1536,380 1612,379 1611,567 1508,549 Z" ref="Carrer de la Selva de Mar cantonada P.º de García Faria (ronda litoral)"/>
+                <path d="M1174,932 L1360,913 1624,905 1753,928 1752,979 1730,981 1645,1043 1645,1097 1217,1107 Z" ref="Pabelló Escola Virolai"/>
+                <path d="M1671,713 L1792,701 1986,699 2076,708 2158,771 2162,910 1926,907 1670,809 Z" ref="Escola Virolai"/>
+                <path d="M2067,706 L2068,420 2139,415 2181,421 2182,700 2113,731 Z" ref="Hotel Meliá Barcelona Sky"/>
+                <path d="M2202,700 L2201,651 2213,481 2257,465 2324,477 2327,600 2327,700 2257,708 Z" ref="Torre Diagonal (cantonada carrer Bilbao)"/>
+                <path d="M2388,1166 L2389,1225 2472,1384 2363,1402 2341,1183 Z" ref="Carrer de Pere Llobet"/>
+                <path d="M1872,964 L2963,833 3086,868 3299,843 3373,884 3474,867 4250,1078 4603,1132 5025,1078 6087,1274 6051,1267 7074,1066 7385,1146 7136,1209 7059,1284 
+                            7061,1376 7741,1502 8199,1601 8499,1852 8154,1887 7605,1841 6792,1801 6399,1738 5568,1690 5287,1524 4793,1618 4480,1487 3696,1395 2692,1358 2516,981 
+                            2013,1027 1914,1039 Z" ref="Parc del Carmel darrere del Parc Güell"/>
+                <path d="M5446,1391 L6286,1375 6310,1421 5484,1447 Z" ref="Av. del Coll del Portell"/>
+                <path d="M7331,1413 L7518,1416 7650,1354 7652,1300 7494,1325 Z" ref="Av. del Coll del Portell"/>
+                <path d="M5454,1573 L6190,1585 6129,1533 5674,1530 Z" ref="Pº. de Turull"/>
+                <path d="M2289,1412 L2551,1409 2767,1331 2854,1346 2836,1448 2409,1559 Z" ref="Parc de la Creueta del Coll"/>
+                <path d="M3696,1395 L4480,1487 4793,1618 5287,1524 5535,1714 5139,1965 4664,2028 4246,2057 4063,1886 3980,1572 3644,1525 Z" ref="Parc de la Creueta del Coll"/>
+                <path d="M3998,410 L4015,417 4031,438 4047,502 4058,595 4061,871 3935,871 3938,595 3951,502 3969,438 3983,417Z" ref="Torre Glòries"/>
+                <path d="M4716,613 L4716,569 4732,550 4732,618 Z" ref="Torre al Passatge de la Llacuna"/>
+                <path d="M4413,796 L4511,781 4570,785 4580,827 4582,871 4518,898 4463,899 4419,835 Z" ref="Museu del Disseny de Barcelona, Plaça de les Glòries"/>
+                <path d="M4464,1094 L4466,919 4530,875 4781,883 4887,928 4886,1088 4600,1132 4463,1088 Z" ref="Habitatges davant del Estadi Municipal Nou Sardenya"/>
+                <path d="M5177,826 L5265,821 5448,829 5420,856 5310,860 Z" ref="Mercat dels Encants de Barcelona"/>
+                <path d="M5507,856 L5590,792 5688,795 5778,834 5758,854 5696,869 Z" ref="Teatre Nacional de Catalunya"/>
+                <path d="M5759,615 L5759,576 5773,560 5773,615 Z" ref="Torre al Carrer de Jaume Vicens i Vives"/>
+                <path d="M6071,241 L6127,402 6144,529 6238,611 6250,652 6287,1008 6066,1010 5995,999 5906,967 5874,707 5927,630 6017,512 6067,247 Z"  ref="Basílica de la Sagrada Família"/>
+                <path d="M6667,626 L6667,599 6673,586 6681,598 6681,626 Z" ref="Torre al Carrer de l'Arquitecte Sert"/>
+                <path d="M7526,651 L7526,301 7632,301 7632,652 Z" ref="Edificio MAPFRE"/>
+                <path d="M7872,665 L7872,298 7990,298 7990,665 Z" ref="Hotel Arts Barcelona"/>
+                <path d="M8024,585 L8056,617 8060,642 8012,646 8018,602 Z" ref="El peix Olímpic"/>
+                <path d="M8486,674 L8491,603 8548,582 8642,570 8682,590 8690,674 Z" ref="Parc de Recerca Biomèdica de Barcelona"/>
+                <path d="M8599,916 L8599,743 8822,741 8822,848 8975,847 8976,928 8921,942 8871,907 8821,873 8691,908 8676,869 8637,871 8633,910 Z" ref="Edificis a la Plaça Tetuan"/>
+                <path d="M8099,743 L8257,692 8649,681 9388,694 9768,714 9630,794 9132,791 9126,750 8924,743 8729,729 8498,730 8480,758 Z" ref="Parc de la Ciutadella"/>
+                <path d="M8646,649 L9049,651 9050,704 8999,682 8923,678 8903,705 8859,671 8685,692 8647,667 Z" ref="Campus Universitario Mar"/>
+                <path d="M8722,649 L8722,572 8814,572 8814,649 Z" ref="Hospital del Mar"/>
+                <path d="M8918,649 L8918,606 9080,606 9081,646 9157,648 9113,664 9113,690 9051,690 9049,653 Z" ref="Hospital del Mar"/>
+                <path d="M9148,573 L9164,605 9164,641 9159,683 9134,683 9131,641 9131,605 Z" ref="Torre de les Aigües"/>
+                <path d="M8891,701 L8901,716 8902,764 9013,772 9061,746 9090,745 9086,814 8881,810 8879,713 Z" ref="Tribunal Superior de Justícia de Catalunya, Sala de lo Social"/>
+                <path d="M9154,860 L9157,794 9237,798 9218,841 Z" ref="Arc de Triomf de Barcelona"/>
+                <path d="M9763,701 L9795,672 9834,663 9940,660 10054,671 10161,685 10216,705 10205,748 10140,758 10140,719 9972,711 9870,688 9824,695 9817,723 9790,738 9765,715 Z" 
+                            ref="Estació de França"/>
+                <path d="M11357,545 L11360,651 10941,679 10752,677 10571,702 10442,693 10435,671 10376,669 10351,629 10284,629 
+                            10218,703 10165,684 10034,668 9934,663 9919,668 9830,661 9832,633 10556,605 10903,599 11246,585 11247,545 Z" ref="la Barceloneta"/>
+                <path d="M10674,702 L10882,697 10886,661 10924,664 10925,740 10776,742 10675,738 Z" ref="Basílica de Santa Maria del Mar"/>
+                <path d="M9097,852 L9159,864 9069,908 8824,1005 8328,1168 8324,1229 8231,1259 8189,1206 8222,1169 Z" ref="Pg. de Sant Joan"/>
+                <path d="M8843,1208 L8855,1254 8944,1248 9628,856 9624,840 9577,842 Z" ref="Carrer Bailèn"/>
+                <path d="M9743,1116 L9799,1132 10090,829 10052,825 Z" ref="Carrer Girona"/>
+                <path d="M10483,851 L10543,863 10443,1091 10463,1151 10413,1147 10386,1085 Z" ref="Carrer Bruc"/>
+                <path d="M10698,978 L10466,1011 10458,1054 10599,1046 10707,1034 Z" ref="Casa Les Punxes"/>
+                <path d="M10981,1064 L11056,1065 11008,903 10948,901 Z" ref="Carrer Roger de Llúria"/>
+                <path d="M11002,784 L10935,799 10934,838 10946,903 11008,903 11008,882 11002,881 Z" ref="Rda. de Sant Pere"/>
+                <path d="M11008,882 11002,881 11002,687 11079,687 11079,836 11035,837 11010,861 L Z" ref="Plaça d'Urquinaona"/>
+                <path d="M11079,700 L11079,850 11164,845 11164,700 Z" ref="Carrer de Trafalgar"/>
+                <path d="M10715,1326 L10576,1558 10556,1612 10949,1679 10951,1719 11292,1708 11291,1568 11308,1549 11876,1561 11883,1677 12029,1568 
+                            12150,1577 12229,1661 12275,1659 12272,1486 11798,1474 11167,1452 10868,1442 10845,1326 Z" ref="Plaça de Lesseps"/>
+                <path d="M11461,867 L11414,867 11624,1122 11682,1083 Z" ref="Carrer de Pau Claris"/>
+                <path d="M11461,867 L11414,867 11324,723 11355,722 Z" ref="Carrer Via Laietana"/>
+                <path d="M11688,656 L11770,580 11830,654 11840,780 11691,780 Z" ref="Catedral de Barcelona"/>
+                <path d="M12034,615 L11981,615 11969,463 12008,452 12047,463 Z" ref="Telefèric del Port"/>
+                <path d="M12107,858 L12062,865 12302,1095 12439,1108 12444,1148 12476,1198 12567,1187 12566,1138 12258,895 12167,860 Z" ref="Passeig de Gracia"/>
+                <path d="M12565,874 L12738,880 12739,1097 12681,1066 12578,1143 12564,1134 Z" ref="Mandarín Oriental Residences, Diagonal cantonada Gracia"/>
+                <path d="M12388,348 L12502,348 12502,566 12388,570 Z" ref="Hotel W Barcelona (hotel vela)"/>
+                <path d="M12710,661 L12752,663 12753,765 12721,781 12656,787 12632,782 12619,770 12636,738 12708,741 Z" ref="Basílica de Santa María del Pi"/>
+                <path d="M13128,745 L13144,687 13216,687 13274,697 13324,717 13327,754 13218,758 Z" ref="Gran Teatro del Liceu"/>
+                <path d="M13472,685 L13526,732 13534,762 13519,777 13405,770 13414,729 Z" ref="Església de Sant Agustí"/>
+                <path d="M13101,653 L13103,624 13135,570 13151,549 13222,541 13296,541 13440,544 13496,565 13494,659 13313,659 13313,677 Z" ref="World Trade Center Barcelona"/>
+                <path d="M13207,691 L13207,578 13223,578 13223,691 Z" ref="Monument a Cristòfor Colom"/>
+                <path d="M13511,497 L13543,482 13575,483 13602,497 13616,711 13496,704 Z" ref="Edifici Colom"/>
+                <path d="M13454,371 L13473,421 13480,447 13487,661 13454,667 13426,664 13430,448 13436,420 Z" ref="Torre de Jaume I - Telefèric del Port de Barcelona"/>
+                <path d="M13800,1262 L13801,1205 13846,1186 13885,1199 13888,1238 13909,1281 13910,1313 Z" ref="Vía Augusta"/>
+                <path d="M13961,982 L14103,981 14104,1184 13960,1189 Z" ref="Plaça de Gal·la Placídia"/>
+                <path d="M14123,805 L14239,805 14239,1102 14123,1062 Z" ref="Banc Sabadell al carrer Balmes cantonada Diagonal"/>
+                <path d="M15547,736 L15586,717 15649,715 15680,737 15684,897 15549,899 Z" ref="Carrer d'Aragó cantonada Carrer de Casanova"/>
+                <path d="M13107,1691 L13552,1546 13828,1464 14201,1362 14554,1300 15105,1242 15267,1242 15395,1333 15414,1384 15528,1362 16073,1369 16363,1402 16642,1509 
+                            16939,1538 17115,1643 16976,1737 16614,1610 16361,1479 16092,1488 15915,1529 15591,1482 15471,1509 15156,1540 14705,1495 14694,1582 14064,1634 
+                            13656,1661 13411,1780 Z" ref="Jardins del Turó del Putxet"/>
+                <path d="M14821,2015 L14735,1712 14683,1713 14738,1944 Z" ref="Carrer de Hurtado"/>
+                <path d="M15549,1838 L15649,1877 15696,1634 15589,1614 Z" ref="Carrer de Roca i Batlle"/>
+                <path d="M13965,1685 L14084,1757 14124,1795 14123,1825 14087,1878 14026,1911 13905,1814 Z" 
+                            ref="Torre Angela Ferreres - Lloc d'interès històric al Carrer de Portolà cantonada Carrer d'Espinoi"/>
+                <path d="M8287,2706 L8288,2674 8541,2602 8743,2614 8746,2635 8585,2757 Z" ref="CAP Vallcarca Sant Gervasi"/>
+                <path d="M8421,2721 L8338,2861 8240,2858 8212,2886 8212,2952 8126,2964 8078,2959 8077,2774 8035,2766 8035,2720 7998,2718 8103,2690 Z" 
+                            ref="ICAM - Institut Català d'Avaluacions Mèdiques"/>
+                <path d="M8078,2959 L8077,2774 8035,2766 8035,2720 8005,2699 7865,2684 7796,2703 7755,2727 7678,2796 7679,2831 7806,2844 7807,2866 
+                            7852,2870 7854,3063 7960,3067 8056,3045 8126,3016 8127,2966 Z" ref="Comisaría de los Mossos d'Esquadra - Gracia"/>
+                <path d="M7854,3063 L7852,2870 7807,2866 7806,2844 7651,2826 7540,2826 7343,2883 7339,3186 7705,3197 7855,3074 Z" 
+                            ref="Unidad Territorial de la Guardia Urbana del distrito de Gracia"/>
+                <path d="M8765,2935 L8766,2663 9120,2564 9727,2436 10169,2277 10578,2298 10714,2386 10714,2495 10896,2483 10969,2618 11092,2625 11094,2512 11416,2369 11526,2376 
+                            11631,2414 11370,2428 11370,2539 11335,2538 11334,2858 10918,2947 10706,2941 10663,2800 10372,2801 10370,2837 10040,2886 9739,2959 9407,2964 9398,2844 
+                            9278,2843 9270,2973 9019,2998 Z" ref="Parc Sanitari Pere Virgili"/>
+                <path d="M10896,2483 L10969,2618 11092,2625 11094,2512 11324,2412 10713,2401 10712,2495 Z" ref="Hospital Delfos"/>
+                <path d="M12164,1800 L12164,1830 12063,1905 12063,2162 11653,2143 11424,2121 11257,2090 11448,1887 11523,1862 11774,1810 12009,1788 Z" ref="Jardins de Mercè Rodoreda"/>
+                <path d="M11960,2181 L12038,2215 11931,2265 11724,2278 11454,2365 11149,2383 10983,2310 10947,2232 Z" ref="Viaducte de Vallcarca"/>
+                <path d="M11370,2428 L11370,2539 11335,2538 11334,2932 11469,3105 11835,3067 12237,3055 12980,3049 12980,2556 12936,2511 12805,2501 12418,2510 11808,2529 
+                            11760,2448 11715,2419 Z" ref="Hospital Quirónsalud"/>
+                <path d="M13643,2517 L13643,2823 13445,2823 13445,2439 Z" ref="Carrer de Gomis"/>
+                <path d="M13643,2517 L13643,2823 14594,2840 14594,2468 Z" ref="Plaça d'Alfonso Comín"/>
+                <path d="M14906,639 L14900,599 15061,530 15719,403 16129,326 16953,166 17004,195 17607,170 17928,156 18319,161 18639,176 18965,209 19192,264 19850,337 20578,333 
+                            20899,318 20985,345 21025,382 21480,431 21557,479 22257,515 22306,602 21761,615 21307,640 20854,640 20482,643 19970,670 19183,684 18433,683 17905,612 
+                            17447,637 17018,637 16555,594 16278,611 15979,636 14908,641 Z" ref="Muntanya de Montjuïc"/>
+                <path d="M16548,477 L16882,480 16824,566 16697,580 16517,560 16519,535 Z" ref="Piscines Municipals de Barcelona"/>
+                <path d="M16970,177 L16970,208 17036,213 17283,210 17454,206 17660,194 17660,175 17483,156 17121,131 Z" ref="Castell de Montjuïc"/>
+                <path d="M19126,240 L19144,291 19483,335 19869,358 20461,349 20940,353 20895,319 20579,297 20145,279 19833,277 19426,273 19177,244 Z" ref="Cementiri de Montjuïc"/>
+                <path d="M18878,428 L18876,346 19314,346 19381,299 19435,344 19477,366 19477,420 19340 440 Z" ref="Estadi Olímpic de Montjuïc"/>
+                <path d="M19779,413 L19852,373 19911,355 19946,355 20051,379 20093,405 20094,430 20001,442 19779,431 Z" ref="Palau Sant Jordi"/>
+                <path d="M20274,447 L20254,265 20292,138 20337,265 20319,446 Z" ref="Torre de Comunicaciones de Montjuic"/>
+                <path d="M20174,534 L20243,517 20443,502 20835,504 20948,537 20951,567 20829,585 20619,612 20429,584 20173,579 Z" ref="Poble Espanyol de Barcelona"/>
+                <path d="M18202,594 L18202,571 18220,546 18238,535 18255,547 18272,571 18272,594 Z" ref="Museo de Arqueología de Cataluña MAC Barcelona"/>
+                <path d="M17863,436 L18001,462 18001,468 17970,496,17792,495 17772,464 17772,454 17824,436 Z" ref="Fundació Joan Miró"/>
+                <path d="M18536,580 L18604,541 18689,542 18753,578 18755,623 18536,626 Z" ref="Cartoteca de Catalunya"/>
+                <path d="M13401,2851 L15319,2806 15478,2951 15478,3080 13401,3096 Z" ref="Camp de futbol de l'Àliga"/>
+                <path d="M18050,778 L18471,764 18473,877 18050,899 Z" ref="Edifici Estel a l'Avinguda de Roma"/>
+                <path d="M18228,804 L18239,804 18247,1005 18223,1007 Z" ref="Xemeneia de la fàbrica Batlló de l' Escola Industrial"/>
+                <path d="M18317,826 L18436,825 18433,1119 18316,1124 Z" ref="Edifici Godo - Diagonal davant del Carrer de Calvet"/>
+                <path d="M18136,1349 L18352,1236 18601,1215 18814,1208 18927,1251 18951,1279 18922,1357 18374,1382 18245,1345 Z" ref="Parc de Monterols"/>
+                <path d="M18383,1622 L18589,1645 18719,1959 18718,2123 18450,2129 18435,1954 18395,1675 Z" ref="Carrer Balmes"/>
+                <path d="M17565,2083 L17595,2042 17662,2006 17787,2009 18050,2039 18296,2047 18308,2057 18327,2132 18158,2133 18160,2347 17976,2346 17960,2175 17677,2194 17566,2144 Z" 
+                            ref="Torre Andreu (La Rotonda)"/>
+                <path d="M18192,1835 L18247,1927 18254,2100 18216,2105 18141,2057 18140,1929 Z" ref="Cúpula Modernista de la Torre Andreu (La Rotonda)"/>
+                <path d="M19210,859 L19350,855 19353,1073 19210,1085 Z" ref="Edifici Macià, Pl. de Francesc Macià"/>
+                <path d="M21381,890 L21801,889 21805,1123 21382,1144 Z" ref="Edifici Ganduxer 5 Bona Arquitectura cantonada Carrer de Bori i Fontestà"/>
+                <path d="M18858,582 L18961,562 19265,559 19300,574 19303,640 19257,657 18880,666 18853,643 Z" ref="Palau d'Alfons XIII"/>
+                <path d="M19406,694 L19557,694 19556,668 19466,645 19406,668 Z" ref="Font Màgica de Montjuïc"/>
+                <path d="M19468,623 L19477,561 19783,552 19938,566 19982,639 19610,651 19472,638 Z" ref="Palau Victoria Eugenia"/>
+                <path d="M19800,625 L19831,641 19842,653 19923,666 19933,674 19933,694 19824,715 19765,715 19765,760 19626,690 19626,658 19659,640 19679,640 19752,657 19770,640 Z" 
+                            ref="Palau de la Metal·lúrgia"/>
+                <path d="M19541,683 L19628,677 19739,713 19744,794 19402,819 19385,795 19389,705 Z" ref="Centre comercial Arenas de Barcelona"/>
+                <path d="M19296,327 L19325,403 19326,421 19357,425 19376,342 19393,411 19410,348 19432,457,19478,451 19497,397 19536,457 19535,516 19380,536 19058,544 19058,460 
+                            19095,410 19117,445 19120,405 19136,346 19151,405 19167,353 19192,426 19233,410 19270,408 19277,372 Z" ref="Museu Nacional d'Art de Catalunya"/>
+                <path d="M22902,1588 L22975,1623 23054,1630 23159,1617 23236,1621 23111,1760 22854,1739 22842,1651 Z" 
+                            ref="Església dels Sants Gervasi i Protasi i Mare de Déu de la Bonanova"/>
+                <path d="M22975,1623 L23054,1630 23054,1558 23037,1475 23013,1415 22992,1478 22975,1558 Z" ref="Campanar de l'Església de la Bonanova"/>
+                <path d="M23533,1484 L23559,1639 23507,1639 Z" ref="El Pinar - Castell de Manuel Arnús"/>
+                <path d="M23648,778 L23794,761 23911,789 23911,925 23620,957 23383,927 23322,877 23326,865 23451,844 23621,835 23637,797 Z" ref="L'illa Diagonal"/>
+                <path d="M24013,474 L24230,472 24230,575 24013,575 Z" ref="Jutjat d'Instrucció"/>1
+                <path d="M24211,567 L24210,492 24424,488 24424,575 Z" ref="Jutjat Penal"/>
+                <path d="M24441,501 L24600,501 24600,606 24441,606 Z" ref="Jutjat Civil"/>
+                <path d="M25721,987 L25784,950 26307,938 26589,949 26603,920 26660,913 26767,930 26774,962 26466,960 26318,1010 26155,998 26077,1041 25882,1029 25845,1064 25760,996 Z" 
+                            ref="Passeig de Sant Joan Bosco cantonada Passeig de Manuel Girona"/>
+                <path d="M27317,613 L27563,624 27730,632 27885,644 27885,713 27544,776 26882,733 26880,627 27184,616 Z" ref="Camp Nou"/>
+                <path d="M28065,697 L28141,686 28272,714 28274,730 28223,771 28138,757 Z" ref="Palau Blaugrana"/>
+                <path d="M28128,625 L28136,625 28143,873 28120,873 Z" ref="Església de Sant Ot"/>
+                <path d="M27565,783 L27565,542 27731,542 27735,783 Z" ref="Grand Hyatt Barcelona (antiguo princesa sofia)"/>
+                <path d="M26735,823 L26735,541 26885,541 26888,823 Z" ref="La Caixa gran"/>
+                <path d="M26303,862 L26303,727 26458,727 26458,862 Z" ref="La Caixa petita"/>
+                <path d="M27048,498 L27048,410 27144,362 27357,345 27511,341 27582,348 27614,359 27614,456 27568,498 27333,507 Z" ref="El Gornal, L'H"/>
+                <path d="M29527,377 L29521,313 29587,291 29775,271 29876,281 29881,361 29590,383 Z" ref="Estadi Municipal de Fútbol de L'Hospitalet"/>
+                <path d="M28032,349 L28032,304 28151,293 28271,307 28271,349 28202,355 Z" ref="Institut Català d'Oncologia - Hospital Duran i Reynals"/>
+                <path d="M27726,400 L27726,357 27775,336 28030,342 28198,348 28297,342 28303,325 28514,322 28605,325 28769,287 29124,310 29248,309 29490,320 29495,382 29214,419 
+                            28752,457 28372,473 27873,484 Z" ref="Bellvitge, L'H"/>
+                <path d="M29124,310 L29248,309 29248,283 29208,205 29143,205 29124,258 Z" ref="Hospital Universitari de Bellvitge"/>
+                <path d="M27314,187 L27312,133 28378,103 29472,71 29489,66 29545,65 29647,63 30873,39 31537,75 31434,95 30442,132 29226,171 28840,179 27980,201 Z" 
+                            ref="Josep Tarradellas Aeroport de Barcelona-El Prat"/>
+                <path d="M28514,322 L28605,325 28605,170 28514,170 Z" ref="Hotel Hesperia"/>
+                <path d="M30129,196 L30154,234 30108,239 30096,225 Z" ref="Parròquia de Sants Pere i Sants Pau - el prat"/>
+                <path d="M28392,50 L28409,61 28404,120 28435,120 28435,132 28349,134 28349,122 28380,121 28375,63 Z" ref="Torre de Control"/>
+                <path d="M30160,34 L30610,48 30623,75 30243,87 29458,104 29464,86 29924,62 Z" ref="Terminal T1"/>
+                <path d="M27806,121 L27822,121 27822,139 27806,139 Z" ref="Radar"/>
+                <path d="M31144,116 L31223,116 31384,140 31382,159 31164,168 31144,144 Z" ref="Cervesa Estrella Damm"/>
+            </g>
+        </svg>
+    </div>
+    <script>
+        const visor = document.getElementById('visor');
+        const svg = document.getElementById('elSVG');
+        const tooltip = document.getElementById('tooltip');
+
+        // Variables de estado
+        let isDown = false;
+        let startX, startY, scrollLeft, scrollTop;
+        
+        // Dimensiones originales de la imagen (viewBox)
+        const ORG_WIDTH = 31645;
+        const ORG_HEIGHT = 3278;
+        const ASPECT_RATIO = ORG_WIDTH / ORG_HEIGHT;
+
+        // Variables de Zoom
+        let currentScale = 1.0;
+        const ZOOM_SPEED = 0.1; // Velocidad del zoom con rueda
+
+        // 1. INICIALIZACIÓN: Ajustar al alto de la pantalla (en píxeles reales)
+        function initLayout() {
+            // Calculamos el tamaño inicial para que encaje verticalmente
+            const windowHeight = window.innerHeight;
+            const initialWidth = windowHeight * ASPECT_RATIO;
+
+            // Aplicamos dimensiones físicas (esto permite que el navegador haga zoom nativo si quiere)
+            svg.style.height = windowHeight + 'px';
+            svg.style.width = initialWidth + 'px';
+            
+            // Centramos horizontalmente
+            visor.scrollLeft = (initialWidth - window.innerWidth) / 2;
+        }
+
+        window.onload = initLayout;
+        // Opcional: Recalcular si redimensionan la ventana (como rotar móvil)
+        window.addEventListener('resize', () => {
+             // Solo reajustamos si no hemos hecho zoom manual, para no perder la posición
+             if(Math.abs(svg.clientHeight - window.innerHeight) < 10) {
+                 initLayout();
+             }
+        });
+
+        // 2. ZOOM CON RUEDA DEL RATÓN (Cálculo vectorial para hacer zoom hacia el puntero)
+        visor.addEventListener('wheel', (e) => {
+            // Si pulsan Ctrl, dejamos que el navegador haga su zoom nativo
+            if (e.ctrlKey) return; 
+
+            e.preventDefault();
+
+            const delta = Math.sign(e.deltaY) * -1; // -1 abajo, 1 arriba
+            const scaleAmount = 1 + (delta * ZOOM_SPEED);
+
+            // Obtenemos dimensiones actuales
+            const rect = svg.getBoundingClientRect();
+            const currentW = rect.width;
+            const currentH = rect.height;
+
+            // Calculamos nuevas dimensiones
+            let newW = currentW * scaleAmount;
+            let newH = currentH * scaleAmount;
+
+            // Límites (Mínimo: alto de pantalla, Máximo: 5 veces original)
+            if (newH < window.innerHeight) {
+                newH = window.innerHeight;
+                newW = newH * ASPECT_RATIO;
+            }
+            if (newW > ORG_WIDTH * 5) return; // Límite máximo
+
+            // --- LA MAGIA MATEMÁTICA ---
+            // Queremos que el punto bajo el ratón se mantenga estable.
+            // 1. Posición del ratón relativa al visor
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            // 2. Posición del ratón relativa a la imagen actual (offset)
+            // visor.scrollLeft + mouseX = posición absoluta en la imagen
+            const imageX = visor.scrollLeft + mouseX;
+            const imageY = visor.scrollTop + mouseY;
+
+            // 3. Aplicamos el nuevo tamaño
+            svg.style.width = newW + 'px';
+            svg.style.height = newH + 'px';
+
+            // 4. Calculamos el nuevo scroll para compensar el crecimiento
+            // La imagen ha crecido por un factor (newW / currentW).
+            // El punto imageX ahora está en imageX * factor.
+            const scaleFactor = newW / currentW;
+            
+            visor.scrollLeft = (imageX * scaleFactor) - mouseX;
+            visor.scrollTop = (imageY * scaleFactor) - mouseY;
+
+        }, { passive: false });
+
+        // 3. ARRASTRAR (PANNING) - Actualizado para X e Y
+        visor.addEventListener('mousedown', (e) => {
+            if(e.target.tagName === 'path') return; // Si es un path, no arrastramos
+            isDown = true;
+            visor.classList.add('arrastrando');
+            startX = e.pageX - visor.offsetLeft;
+            startY = e.pageY - visor.offsetTop;
+            scrollLeft = visor.scrollLeft;
+            scrollTop = visor.scrollTop;
+        });
+
+        visor.addEventListener('mouseleave', () => { isDown = false; visor.classList.remove('arrastrando'); });
+        visor.addEventListener('mouseup', () => { isDown = false; visor.classList.remove('arrastrando'); });
+
+        visor.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - visor.offsetLeft;
+            const y = e.pageY - visor.offsetTop;
+            
+            const walkX = (x - startX) * 1; // Velocidad 1:1
+            const walkY = (y - startY) * 1;
+
+            visor.scrollLeft = scrollLeft - walkX;
+            visor.scrollTop = scrollTop - walkY;
+        });
+
+        // 4. LOGICA DE PATHS Y TOOLTIP
+        function mostrarTooltip(e, esTactil) {
+            // Buscamos el elemento bajo el punto (x,y)
+            let clientX = esTactil ? e.touches[0].clientX : e.clientX;
+            let clientY = esTactil ? e.touches[0].clientY : e.clientY;
+            
+            // Truco: Ocultamos el tooltip momentáneamente para ver qué hay debajo
+            // si el tooltip estuviera estorbando (aunque pointer-events:none lo evita)
+            let target = document.elementFromPoint(clientX, clientY);
+
+            // Verificamos si es un path válido
+            if (target && target.tagName === 'path' && target.hasAttribute('ref')) {
+                tooltip.textContent = target.getAttribute('ref');
+                tooltip.style.display = 'block';
+                
+                // Posicionamos
+                tooltip.style.left = (clientX + 15) + 'px';
+                tooltip.style.top = (clientY - 35) + 'px';
+                
+                // Cursor de dedo
+                svg.style.cursor = 'pointer';
+            } else {
+                svg.style.cursor = 'default';
+            }
+        }
+
+        visor.addEventListener('mousedown', (e) => {
+            if(e.target.tagName === 'path') {
+                mostrarTooltip(e, false);
+                // Si mantenemos pulsado, queremos que se vea. 
+                // Al soltar (mouseup) se quitará según tu lógica anterior,
+                // o podemos dejarlo hasta que salga del elemento.
+                // Aquí lo dejo que se muestre mientras el ratón esté pulsado.
+            }
+        });
+
+        // Al mover el ratón con el botón pulsado NO queremos perder el tooltip si seguimos sobre el path
+        // Pero tú pediste "mientras la pulsación persista".
+        document.addEventListener('mouseup', () => {
+            tooltip.style.display = 'none';
+            svg.style.cursor = 'default';
+        });
+
+        // 5. MOVIL
+        // En móvil dejamos el scroll nativo para movernos, pero añadimos el toque para info
+        visor.addEventListener('touchstart', (e) => {
+            if(e.target.tagName === 'path') {
+               // e.preventDefault(); // Descomentar si no quieres que el móvil haga zoom/scroll al tocar un edificio
+               mostrarTooltip(e, true);
+            }
+        }, {passive: false});
+
+        visor.addEventListener('touchend', () => {
+            tooltip.style.display = 'none';
+        });
+
+    </script>
+</body>
+</html>
