@@ -28,28 +28,27 @@
             display: block;
             transform-origin: 0 0;  /* Transform-origin ajuda a fer que el redibuix sigui suau */
         }
-        #elSVG path {   /* ESTILS de PATHS */
+        #elSVG path {   /* estils de paths */
             cursor: pointer;
-            fill: rgba(255, 255, 255, 0); 
+            fill: #ffffff00; 
             stroke: none;
-            transition: fill 0.2s;
+            transition: fill .2s;
         }
         #elSVG path:hover {
-            fill: rgba(255, 255, 255, 0.1);
-            stroke: rgba(255, 255, 255, 0.3);
-            stroke-width: 1px;
+            fill: #ffffff05;
+            stroke: #ffffff10;
+            stroke-width: .5px;
         }
-        /* TOOLTIP */
         #tooltip {
             position: fixed;
             display: none;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: #fff;
-            padding: 6px 10px;
-            border: 1px solid #fff;
+            background-color: #00007f7f;
+            color: #ffff00;
+            padding: 2px 6px;
+            border: 1px solid #ff00007f;
             border-radius: 4px;
-            font-family: monospace; /* Fuente monoespaciada estilo consola */
-            font-size: 14px;
+            font-family: Arial, monospace; /* Fuente monoespaciada estilo consola */
+            font-size: 16px;
             pointer-events: none; 
             z-index: 9999;
             white-space: nowrap;
@@ -60,8 +59,8 @@
     <div id="tooltip"></div>
     <div id="visor">
         <svg id="elSVG" viewBox="0 0 31645 3278" xmlns="http://www.w3.org/2000/svg">
-            <image x="0" y="0" width="31645" height="3278" href="barna055.jpeg"/>
-            <g fill="#ff00ff30">
+            <image x="0" y="0" width="31645" height="3278" href="barna057.jpeg"/>
+            <g>
                 <path d="M43,356 L190,356 190,454 206,454 206,488 43,501 Z" ref="Leonardo Royal Hotel Barcelona Forum"/>
                 <path d="M233,482 L234,458 255,458 255,364 347,364 347,364 347,444 342,476 Z" ref="UTAC Sirius i Departament de Drets Socials"/>
                 <path d="M409,465 L409,366 545,366 545,441 Z" ref="Hilton Diagonal Mar Barcelona"/>
@@ -181,7 +180,10 @@
                 <path d="M18228,804 L18239,804 18247,1005 18223,1007 Z" ref="Xemeneia de la fàbrica Batlló de l' Escola Industrial"/>
                 <path d="M18317,826 L18436,825 18433,1119 18316,1124 Z" ref="Edifici Godo - Diagonal davant del Carrer de Calvet"/>
                 <path d="M18136,1349 L18352,1236 18601,1215 18814,1208 18927,1251 18951,1279 18922,1357 18374,1382 18245,1345 Z" ref="Parc de Monterols"/>
+                <path d="M17559,1370 L17606,1478 17606,1500 17506,1500 17506,1478 Z" ref="Cupula al carrer Balmes cantonada ronda General Mitre"/>
                 <path d="M18383,1622 L18589,1645 18719,1959 18718,2123 18450,2129 18435,1954 18395,1675 Z" ref="Carrer Balmes"/>
+                <path d="M17901,1815 L17971,1817 18017,1912 17983,1943 17916,1945" ref="Pi al Club Tennis Barcino"/>
+                <path d="M17546,1877 L17552,1789 17633,1782 17673,1804 17753,1900 17737,1920 17734,1900 17670,1878 Z" ref="Pins al Club Tennis Barcino"/>
                 <path d="M17565,2083 L17595,2042 17662,2006 17787,2009 18050,2039 18296,2047 18308,2057 18327,2132 18158,2133 18160,2347 17976,2346 17960,2175 17677,2194 17566,2144 Z" 
                             ref="Torre Andreu (La Rotonda)"/>
                 <path d="M18192,1835 L18247,1927 18254,2100 18216,2105 18141,2057 18140,1929 Z" ref="Cúpula Modernista de la Torre Andreu (La Rotonda)"/>
@@ -232,34 +234,24 @@
         const visor = document.getElementById('visor');
         const svg = document.getElementById('elSVG');
         const tooltip = document.getElementById('tooltip');
-
-        // Variables de estado
-        let isDown = false;
+        let isDown = false;             // Variables de estado
         let startX, startY, scrollLeft, scrollTop;
-        
-        // Dimensiones originales de la imagen (viewBox)
-        const ORG_WIDTH = 31645;
+        const ORG_WIDTH = 31645;            // Dimensiones originales de la imagen (viewBox)
         const ORG_HEIGHT = 3278;
         const ASPECT_RATIO = ORG_WIDTH / ORG_HEIGHT;
-
-        // Variables de Zoom
-        let currentScale = 1.0;
-        const ZOOM_SPEED = 0.1; // Velocidad del zoom con rueda
-
+        let currentScale = 1.0;         // Variables de Zoom
+        const ZOOM_SPEED = 0.1;         // Velocidad del zoom con rueda
         // 1. INICIALIZACIÓN: Ajustar al alto de la pantalla (en píxeles reales)
         function initLayout() {
             // Calculamos el tamaño inicial para que encaje verticalmente
             const windowHeight = window.innerHeight;
             const initialWidth = windowHeight * ASPECT_RATIO;
-
             // Aplicamos dimensiones físicas (esto permite que el navegador haga zoom nativo si quiere)
             svg.style.height = windowHeight + 'px';
             svg.style.width = initialWidth + 'px';
-            
             // Centramos horizontalmente
             visor.scrollLeft = (initialWidth - window.innerWidth) / 2;
         }
-
         window.onload = initLayout;
         // Opcional: Recalcular si redimensionan la ventana (como rotar móvil)
         window.addEventListener('resize', () => {
@@ -268,7 +260,6 @@
                  initLayout();
              }
         });
-
         // 2. ZOOM CON RUEDA DEL RATÓN (Cálculo vectorial para hacer zoom hacia el puntero)
         visor.addEventListener('wheel', (e) => {
             // Si pulsan Ctrl, dejamos que el navegador haga su zoom nativo
@@ -406,3 +397,7 @@
     </script>
 </body>
 </html>
+
+<!--
+<path d="M L Z" ref=""/>
+-->
